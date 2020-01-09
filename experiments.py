@@ -7,18 +7,18 @@ from pandas import read_csv
 from MultiSVM import *
 
 # from sklearn import datasets
-dataset = load_iris()
-#dataset = load_wine()
-# dataset = load_digits()
+#dataset = load_iris()
+dataset = load_wine()
+dataset = load_digits()
 # #
 X = dataset.data
 y = dataset.target
-#class_weight={0:2,1:1,2:1}
 
-#X, y=load_svmlight_files(["assets/vehicle.scale"])
+
+#X, y=load_svmlight_files(["assets/heart"])
+
 
 #y=y.astype(int)-1
-
 #for glass
 #y[y==6]=3
 
@@ -29,12 +29,12 @@ y = dataset.target
 #y=(y/2).astype(int)-1
 
 #class_weight={0:2,1:1,2:1,3:1,4:1,5:1}
-class_weight={0:2,1:1,2:1}#,3:1,4:1,5:1,6:1,7:1,8:1,9:1}
+class_weight={0:2,1:1,2:1,3:1,4:1,5:1,6:1,7:1,8:1,9:1}
 
 kernel='rbf'
 
 param_grid = {'C': [0.1,0.5,1,5,10,50,100],
-             'degree': [1,2,3,4,5,6,7,8,9] }
+             'gamma': [0.001, 0.005, 0.01, 0.1,0.5,1] }
 
 
 
@@ -49,8 +49,8 @@ clf4 = svm.SVC(kernel=kernel,decision_function_shape='ovo',class_weight=class_we
 titles=["multiSVM","ovr","cramer","ovo"]
 models = (clf1,clf2,clf3,clf4)
 for clf1 , title in zip(models,titles):
-   # clf = GridSearchCV(clf1, param_grid, cv=5)
-    y_pred = cross_val_predict(clf1, X, y, cv=2)
+    clf = GridSearchCV(clf1, param_grid, cv=10)
+    y_pred = cross_val_predict(clf, X, y, cv=10)
     conf_mat = confusion_matrix(y, y_pred)
     sum=0
     for i in range(len(conf_mat)):
